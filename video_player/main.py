@@ -1,6 +1,5 @@
 import os
-import sys, UI
-
+import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.uic import loadUi
@@ -28,6 +27,7 @@ class MainWindow(QMainWindow):
         self.browseButton.clicked.connect(self.openFile)
         self.leftexportButton.clicked.connect(self.leftexportVideo)
         self.rightexportButton.clicked.connect(self.rightexportVideo)
+        self.exportButton.clicked.connect(self.convertVideo)
         self.gotoButton.clicked.connect(self.jumpVideo)
         self.slider.valueChanged.connect(self.skipFrame)
         left = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), self)
@@ -98,6 +98,23 @@ class MainWindow(QMainWindow):
         else:
             self.timer.start()
 
+    def convertVideo(self):
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        write_video = cv2.VideoCapture(self.file_name)
+        input_fps = write_video.get(cv2.CAP_PROP_FPS)
+        file = self.file_name.split('.')[0]
+        file_name = file + '_converted_.mp4'
+        print(file_name)
+        out = cv2.VideoWriter(file_name, fourcc, input_fps, (int(write_video.get(3)), int(write_video.get(4))))
+        while write_video.isOpened():
+            ret, frame = write_video.read()
+            if ret is True:
+                print(write_video.get(cv2.CAP_PROP_POS_FRAMES))
+                out.write(frame)
+            else:
+                break
+        out.release()
+
     def leftexportVideo(self):
         start = self.startline.text()
         end = self.endline.text()
@@ -106,7 +123,9 @@ class MainWindow(QMainWindow):
         input_fps = write_video.get(cv2.CAP_PROP_FPS)
         out = cv2.VideoWriter(path+'/export_left_'+start+'_'+end+'.mp4', fourcc, input_fps, (360, 240))
         write_video.set(1, int(start))
+        print(start)
         for cur in range(int(end)-int(start)+1):
+            print(cur)
             progress = str(int(write_video.get(cv2.CAP_PROP_POS_FRAMES))) + ' / ' \
                        + str(int(end))
             self.exportLabel.setText(progress)

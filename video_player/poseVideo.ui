@@ -215,6 +215,19 @@
      <string>Right Export</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="exportButton">
+    <property name="geometry">
+     <rect>
+      <x>412</x>
+      <y>639</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Convert</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -242,8 +255,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="../../source/repos/poseVideo/poseVideo/poseVideo.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
