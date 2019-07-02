@@ -122,14 +122,13 @@ class MainWindow(QMainWindow):
         write_video = cv2.VideoCapture(self.file_name)
         input_fps = write_video.get(cv2.CAP_PROP_FPS)
         out = cv2.VideoWriter(path+'/export_left_'+start+'_'+end+'.mp4', fourcc, input_fps, (360, 240))
-        write_video.set(1, int(start))
-        print(start)
+        write_video.set(1, int(start)-1)
         for cur in range(int(end)-int(start)+1):
-            print(cur)
+            ret, frame = write_video.read()
             progress = str(int(write_video.get(cv2.CAP_PROP_POS_FRAMES))) + ' / ' \
                        + str(int(end))
             self.exportLabel.setText(progress)
-            ret, frame = write_video.read()
+            print(progress)
             image = frame[240:480, 0:360]
             out.write(image)
         out.release()
@@ -141,12 +140,16 @@ class MainWindow(QMainWindow):
         write_video = cv2.VideoCapture(self.file_name)
         input_fps = write_video.get(cv2.CAP_PROP_FPS)
         out1 = cv2.VideoWriter(path + '/export_right_' + start + '_' + end + '.mp4', fourcc, input_fps, (360, 240))
-        write_video.set(1, int(start))
+        write_video.set(1, int(start)-1)
         for cur in range(int(end)-int(start)+1):
             progress = str(int(write_video.get(cv2.CAP_PROP_POS_FRAMES))) + ' / ' \
                        + str(int(end))
             self.exportLabel.setText(progress)
             ret, frame = write_video.read()
+            progress = str(int(write_video.get(cv2.CAP_PROP_POS_FRAMES))) + ' / ' \
+                       + str(int(end))
+            self.exportLabel.setText(progress)
+            print(progress)
             image1 = frame[240:480, 360:720]
             out1.write(image1)
         out1.release()
